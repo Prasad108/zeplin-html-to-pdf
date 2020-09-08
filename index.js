@@ -26,7 +26,7 @@ exports.handler = function handler(event, context, callback) {
         S3.putObject({
             Bucket: 'html-to-pdf-test-1',
             Key: filename,
-            Body: fs.createReadStream(output),
+            Body: buffer.read(),
             ContentType: 'application/pdf',
         }, (error) => {
             if (error != null) {

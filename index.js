@@ -38,7 +38,7 @@ exports.handler = function handler(event, context, callback) {
                     console.info('Upload done!');
                // callback(null, { filename });
             }
-        }).pipe(writeStream);
+        });
         
             callback(null, {
                 data: buffer.toString("base64")

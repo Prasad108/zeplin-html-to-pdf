@@ -26,7 +26,7 @@ exports.handler = function handler(event, context, callback) {
         S3.putObject({
             Bucket: 'html-to-pdf-test-1',
             Key: filename,
-            Body: fs.createReadStream(output),
+            Body: buffer,
             ContentType: 'application/pdf',
         }, (error) => {
             if (error != null) {
@@ -45,5 +45,5 @@ exports.handler = function handler(event, context, callback) {
             });
         }).catch(error => {
             callback(errorUtil.createErrorResponse(500, "Internal server error", error));
-        }).pipe(writeStream);
+        });
 };

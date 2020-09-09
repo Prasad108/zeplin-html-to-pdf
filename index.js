@@ -15,6 +15,7 @@ exports.handler = function handler(event, context, callback) {
     const filename = `${(event.filename || Math.random().toString(36).slice(2))}.pdf`;
     const pageSize = event.pagesize || 'a4';
     const data = event.data;
+    const bucketName = event.bucketName || 'html-to-pdf-test-1';
     
     
     const output = `/tmp/${filename}`;
@@ -24,7 +25,7 @@ exports.handler = function handler(event, context, callback) {
         .then(buffer => {
         console.log("converted the html to PDF");
         S3.putObject({
-            Bucket: 'html-to-pdf-test-1',
+            Bucket: bucketName,
             Key: filename,
             Body: buffer,
             ContentType: 'application/pdf',

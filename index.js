@@ -17,9 +17,10 @@ exports.handler = function handler(event, context, callback) {
     const data = event.data;
     const bucketName = event.bucketName || 'html-to-pdf-test-1';
     
-    
-    const output = `/tmp/${filename}`;
-    const writeStream = fs.createWriteStream(output);
+    const wkhtmltopdfOptions = {
+        pageSize : event.pagesize || 'a4',
+        orientation : event.orientation || 'Landscape'
+    }
 
     wkhtmltopdf(event.html)
         .then(buffer => {

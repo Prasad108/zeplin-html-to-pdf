@@ -22,7 +22,7 @@ exports.handler = function handler(event, context, callback) {
         orientation : event.orientation || 'Landscape'
     }
 
-    wkhtmltopdf(event.html)
+    wkhtmltopdf(event.html, wkhtmltopdfOptions )
         .then(buffer => {
         console.log("converted the html to PDF");
         S3.putObject({

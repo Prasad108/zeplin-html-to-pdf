@@ -4,80 +4,26 @@ const errorUtil = require("./utils/error");
 const AWS = require('aws-sdk');
 const S3 = new AWS.S3();
 const fs = require('fs');
+var MemoryStream = require('memorystream');
 
-exports.handler = function handler(event, context, callback) {
-    if (!event.html) {
-        const errorResponse = errorUtil.createErrorResponse(400, "Validation error: Missing field 'html'.");
-        callback(errorResponse);
-        return;
+
+exports.handler = function(event, context, callback) {
+    var body = JSON.parse(event.body);
+	var memStream = new MemoryStream();
+    var content;
+	if (body.htmlBase64 != null) {
+        content = new Buffer(body.htmlBase64, 'base64').toString('utf8');
+    } else {
+	    content = body.url;
     }
-    
-    const filename = `${(event.filename || Math.random().toString(36).slice(2))}.pdf`;
-    const pageSize = event.pagesize || 'a4';
-    const data = event.data;
-    const bucketName = event.bucketName || 'html-to-pdf-test-1';
-    
-    const wkhtmltopdfOptions = {
-        pageSize : event.pagesize || 'a4',
-        orientation : event.orientation || 'Landscape'
-    }
-
-//     wkhtmltopdf(event.html )
-//         .then(buffer => {
-//         console.log("converted the html to PDF");
-//         S3.putObject({
-//             Bucket: bucketName,
-//             Key: filename,
-//             Body: buffer,
-//             ContentType: 'application/pdf',
-//         }, (error) => {
-//             if (error != null) {
-//                 console.log({ error })
-//                 console.error('Unable to send file to S3');
-//                // callback('Unable to send file to S3', {});
-//             } else {
-//                 console.log({ filename })
-//                     console.info('Upload done!');
-//                // callback(null, { filename });
-//             }
-//         });
-        
-//             callback(null, {
-//                 data: buffer.toString("base64")
-//             });
-//         }).catch(error => {
-//             callback(errorUtil.createErrorResponse(500, "Internal server error", error));
-//         });
-    
-    wkhtmltopdf(event.html, wkhtmltopdfOptions, function(error, buffer) {
-		if ( error ) {
-			console.error('wkhtmltopdf failed!');
-			callback(error);
-			return;
-		}
-
-		console.log('PDF generation was successful. Starting S3 upload...');
-        
-        console.log("converted the html to PDF");
-        S3.putObject({
-            Bucket: bucketName,
-            Key: filename,
-            Body: buffer,
-            ContentType: 'application/pdf',
-        }, (error) => {
-            if (error != null) {
-                console.log({ error })
-                console.error('Unable to send file to S3');
-               // callback('Unable to send file to S3', {});
-            } else {
-                console.log({ filename })
-                    console.info('Upload done!');
-               // callback(null, { filename });
-            }
-        });
-        
-              callback(null, {
-                data: buffer.toString("base64")
-            });
-	});
+	wkhtmltopdf(content, body.options, function(code, signal) {
+	    const response = {
+            statusCode: 200,
+            body: JSON.stringify({
+                pdfBase64: memStream.read().toString('base64'),
+                options: body.options
+            })
+        };
+        callback(null, response);
+	}).pipe(memStream);
 };

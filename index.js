@@ -18,7 +18,7 @@ exports.handler = function(event, context, callback) {
 
     var  content = event.url;
 	
-	wkhtmltopdf('http://google.com/', 'letter')
+	wkhtmltopdf('http://google.com/', {})
 	  .then(buffer => {
 		 console.log("converted the html to PDF");
 		callback(null, "success");

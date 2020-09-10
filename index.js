@@ -19,16 +19,17 @@ exports.handler = function(event, context, callback) {
     var  content = event.url;
 	const pageSize = event.pagesize || 'a4';
 	
-	wkhtmltopdf('http://google.com/', {pageSize})
-	  .then(buffer => {
-		 console.log("converted the html to PDF");
+	wkhtmltopdf('http://google.com/', {pageSize},() => {
+	 console.log("converted the html to PDF");
 		callback(null, "success");
-		
-	})
-	.catch(error => {
-             callback(errorUtil.createErrorResponse(500, "Internal server error", error));
-         })
-    	.pipe(createWriteStream('demo1.pdf'));
+	},(error) => {
+            if (error != null) {
+               console.error('wkhtmltopdf failed!');
+            } else {
+                console.log('PDF generation was successful. Starting S3 upload...');
+              callback(null, 'Success');
+            }
+        }).pipe(writeStream);
 	
 	
 // 	wkhtmltopdf(content, {}, function(error, stream) {

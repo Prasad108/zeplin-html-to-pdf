@@ -8,20 +8,18 @@ const fs = require('fs');
 
 exports.handler = function(event, context, callback) {
 	console.log(event);
-	    const wkhtmltopdfOptions = {
+	const wkhtmltopdfOptions = {
         pageSize : event.pagesize || 'a4',
         orientation : event.orientation || 'Landscape'
     }
 
     var  content = event.url;
-	wkhtmltopdf(content, wkhtmltopdfOptions , function(code, signal) {
-	    const response = {
-            statusCode: 200,
-            body: JSON.stringify({
-                pdfBase64: signal.toString('base64'),
-                options: body.options
-            })
-        };
-        callback(null, response);
+	wkhtmltopdf(content, wkhtmltopdfOptions , function(error, signal) {
+		if ( error ) {
+			console.error('wkhtmltopdf failed!');
+			callback(error);
+			return;
+		}
+		callback(null, 'Success');
 	});
 };

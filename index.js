@@ -7,6 +7,7 @@ const fs = require('fs');
 
 
 exports.handler = function(event, context, callback) {
+	console.log(event);
     var body = JSON.parse(event.body);
 	var memStream = new MemoryStream();
     var content;

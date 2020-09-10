@@ -4,7 +4,6 @@ const errorUtil = require("./utils/error");
 const AWS = require('aws-sdk');
 const S3 = new AWS.S3();
 const fs = require('fs');
-var MemoryStream = require('memorystream');
 
 
 exports.handler = function(event, context, callback) {
@@ -20,10 +19,10 @@ exports.handler = function(event, context, callback) {
 	    const response = {
             statusCode: 200,
             body: JSON.stringify({
-                pdfBase64: memStream.read().toString('base64'),
+                pdfBase64: signal.toString('base64'),
                 options: body.options
             })
         };
         callback(null, response);
-	}).pipe(memStream);
+	});
 };

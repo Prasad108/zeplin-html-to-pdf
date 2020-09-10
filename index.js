@@ -29,25 +29,5 @@ exports.handler = function(event, context, callback) {
                 console.log('PDF generation was successful. Starting S3 upload...');
               callback(null, 'Success');
             }
-        }).pipe(writeStream);
-	
-	
-// 	wkhtmltopdf(content, {}, function(error, stream) {
-// 		if ( error ) {
-// 			console.error('wkhtmltopdf failed!');
-// 			callback(error);
-// 			return;
-// 		}
-		
-// 	console.log('PDF generation was successful. Starting S3 upload...');
-// 		callback(null, 'Success');
-//	});
-// 	wkhtmltopdf(content, wkhtmltopdfOptions)
-// 	.then(buffer => {
-//             callback(null, {
-//                 data: "success"
-//             });
-//         }).catch(error => {
-//             callback(errorUtil.createErrorResponse(500, "Internal server error", error));
-//         });
+        }).pipe(createWriteStream);
 }

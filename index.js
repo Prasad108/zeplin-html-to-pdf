@@ -13,7 +13,7 @@ exports.handler = function(event, context, callback) {
         orientation : event.orientation || 'Landscape'
     }
 
-    var  content = body.url;
+    var  content = event.url;
 	wkhtmltopdf(content, wkhtmltopdfOptions , function(code, signal) {
 	    const response = {
             statusCode: 200,

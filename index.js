@@ -8,26 +8,40 @@ createWriteStream = require('fs').createWriteStream;
 
 
 exports.handler = function(event, context, callback) {
-	console.log(event);
-	const wkhtmltopdfOptions = {
-        pageSize : event.pagesize || 'a4',
-        orientation : event.orientation || 'Landscape'
+	 if (!event.html) {
+        const errorResponse = errorUtil.createErrorResponse(400, "Validation error: Missing field 'html'.");
+        callback(errorResponse);
+        return;
     }
+
+    wkhtmltopdf(event.html, event.options)
+        .then(buffer => {
+            callback(null, {
+                data: buffer.toString("base64")
+            });
+        }).catch(error => {
+            callback(errorUtil.createErrorResponse(500, "Internal server error", error));
+        });
+// 	console.log(event);
+// 	const wkhtmltopdfOptions = {
+//         pageSize : event.pagesize || 'a4',
+//         orientation : event.orientation || 'Landscape'
+//     }
 	
 	
 
-    var  content = event.url;
-	const pageSize = event.pagesize || 'a4';
+//     var  content = event.url;
+// 	const pageSize = event.pagesize || 'a4';
 	
-	wkhtmltopdf(event.html, {pageSize},() => {
-	 console.log("converted the html to PDF");
-		callback(null, "success");
-	},(error) => {
-            if (error != null) {
-               console.error('wkhtmltopdf failed!');
-            } else {
-                console.log('PDF generation was successful. Starting S3 upload...');
-              callback(null, 'Success');
-            }
-        }).pipe(createWriteStream);
+// 	wkhtmltopdf(event.html, {pageSize},() => {
+// 	 console.log("converted the html to PDF");
+// 		callback(null, "success");
+// 	},(error) => {
+//             if (error != null) {
+//                console.error('wkhtmltopdf failed!');
+//             } else {
+//                 console.log('PDF generation was successful. Starting S3 upload...');
+//               callback(null, 'Success');
+//             }
+//         }).pipe(createWriteStream);
 }

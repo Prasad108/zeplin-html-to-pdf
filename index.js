@@ -17,8 +17,9 @@ exports.handler = function(event, context, callback) {
 	
 
     var  content = event.url;
+	const pageSize = event.pagesize || 'a4';
 	
-	wkhtmltopdf('http://google.com/', {})
+	wkhtmltopdf('http://google.com/', {pageSize})
 	  .then(buffer => {
 		 console.log("converted the html to PDF");
 		callback(null, "success");

@@ -22,8 +22,42 @@ exports.handler = function handler(event, context, callback) {
         orientation : event.orientation || 'Landscape'
     }
 
-    wkhtmltopdf(event.html )
-        .then(buffer => {
+//     wkhtmltopdf(event.html )
+//         .then(buffer => {
+//         console.log("converted the html to PDF");
+//         S3.putObject({
+//             Bucket: bucketName,
+//             Key: filename,
+//             Body: buffer,
+//             ContentType: 'application/pdf',
+//         }, (error) => {
+//             if (error != null) {
+//                 console.log({ error })
+//                 console.error('Unable to send file to S3');
+//                // callback('Unable to send file to S3', {});
+//             } else {
+//                 console.log({ filename })
+//                     console.info('Upload done!');
+//                // callback(null, { filename });
+//             }
+//         });
+        
+//             callback(null, {
+//                 data: buffer.toString("base64")
+//             });
+//         }).catch(error => {
+//             callback(errorUtil.createErrorResponse(500, "Internal server error", error));
+//         });
+    
+    wkhtmltopdf(event.html, wkhtmltopdfOptions, function(error, buffer) {
+		if ( error ) {
+			console.error('wkhtmltopdf failed!');
+			callback(error);
+			return;
+		}
+
+		console.log('PDF generation was successful. Starting S3 upload...');
+        
         console.log("converted the html to PDF");
         S3.putObject({
             Bucket: bucketName,
@@ -42,10 +76,8 @@ exports.handler = function handler(event, context, callback) {
             }
         });
         
-            callback(null, {
+              callback(null, {
                 data: buffer.toString("base64")
             });
-        }).catch(error => {
-            callback(errorUtil.createErrorResponse(500, "Internal server error", error));
-        });
+	});
 };

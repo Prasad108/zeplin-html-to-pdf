@@ -19,7 +19,7 @@ exports.handler = function(event, context, callback) {
     var  content = event.url;
 	
 	wkhtmltopdf('http://google.com/', 'letter')
-    	.pipe(createWriteStream('demo1.pdf'));
+    	.pipe(createWriteStream('demo1.pdf');
 	return { "status" : "success"
 	}
 	

@@ -14,10 +14,12 @@ exports.handler = function(event, context, callback) {
     }
 
     var  content = event.url;
-	wkhtmltopdf(content, wkhtmltopdfOptions ).then(buffer => {
+	wkhtmltopdf(content, wkhtmltopdfOptions)
+	.then(buffer => {
             callback(null, {
                 data: "success"
             });
         }).catch(error => {
             callback(errorUtil.createErrorResponse(500, "Internal server error", error));
         });
+}

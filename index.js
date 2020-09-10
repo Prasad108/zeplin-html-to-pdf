@@ -19,9 +19,15 @@ exports.handler = function(event, context, callback) {
     var  content = event.url;
 	
 	wkhtmltopdf('http://google.com/', 'letter')
+	  .then(buffer => {
+		 console.log("converted the html to PDF");
+		callback(null, "success");
+		
+	})
+	.catch(error => {
+             callback(errorUtil.createErrorResponse(500, "Internal server error", error));
+         })
     	.pipe(createWriteStream('demo1.pdf'));
-	return { "status" : "success"
-	}
 	
 	
 // 	wkhtmltopdf(content, {}, function(error, stream) {

@@ -20,7 +20,7 @@ exports.handler = function handler(event, context, callback) {
     
     const wkhtmltopdfOptions = [ orientation]
 
-    wkhtmltopdf(event.html, event.orientation )
+    wkhtmltopdf(event.html, event.options)
         .then(buffer => {
         console.log("converted the html to PDF");
         S3.putObject({

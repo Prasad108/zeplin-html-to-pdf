@@ -14,7 +14,7 @@ exports.handler = function(event, context, callback) {
     }
 
     var  content = event.url;
-	wkhtmltopdf(content, wkhtmltopdfOptions, function(error, stream) {
+	wkhtmltopdf(content, {}, function(error, stream) {
 		if ( error ) {
 			console.error('wkhtmltopdf failed!');
 			callback(error);

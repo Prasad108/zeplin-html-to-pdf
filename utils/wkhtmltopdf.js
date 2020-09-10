@@ -1,6 +1,7 @@
 const { spawn } = require("child_process");
 
 module.exports = function (html, options = []) {
+    console.log("options : ");
     console.log(options);
     return new Promise(((resolve, reject) => {
         const bufs = [];

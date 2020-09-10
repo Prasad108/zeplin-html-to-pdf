@@ -4,44 +4,47 @@ const errorUtil = require("./utils/error");
 const AWS = require('aws-sdk');
 const S3 = new AWS.S3();
 const fs = require('fs');
-createWriteStream = require('fs').createWriteStream;
 
-
-exports.handler = function(event, context, callback) {
-	 if (!event.html) {
+exports.handler = function handler(event, context, callback) {
+    if (!event.html) {
         const errorResponse = errorUtil.createErrorResponse(400, "Validation error: Missing field 'html'.");
         callback(errorResponse);
         return;
     }
+    
+    const filename = `${(event.filename || Math.random().toString(36).slice(2))}.pdf`;
+    const pageSize = event.pagesize || 'a4';
+    const data = event.data;
+    const bucketName = event.bucketName || 'html-to-pdf-test-1';
+	const orientation = event.orientation || 'Landscape'
+    
+    const wkhtmltopdfOptions = [ orientation]
 
-    wkhtmltopdf(event.html, event.options)
+    wkhtmltopdf(event.html, event.orientation )
         .then(buffer => {
+        console.log("converted the html to PDF");
+        S3.putObject({
+            Bucket: bucketName,
+            Key: filename,
+            Body: buffer,
+            ContentType: 'application/pdf',
+        }, (error) => {
+            if (error != null) {
+                console.log({ error })
+                console.error('Unable to send file to S3');
+               // callback('Unable to send file to S3', {});
+            } else {
+                console.log({ filename })
+                    console.info('Upload done!');
+               // callback(null, { filename });
+            }
+        });
+        
             callback(null, {
                 data: buffer.toString("base64")
             });
         }).catch(error => {
             callback(errorUtil.createErrorResponse(500, "Internal server error", error));
         });
-// 	console.log(event);
-// 	const wkhtmltopdfOptions = {
-//         pageSize : event.pagesize || 'a4',
-//         orientation : event.orientation || 'Landscape'
-//     }
-	
-	
-
-//     var  content = event.url;
-// 	const pageSize = event.pagesize || 'a4';
-	
-// 	wkhtmltopdf(event.html, {pageSize},() => {
-// 	 console.log("converted the html to PDF");
-// 		callback(null, "success");
-// 	},(error) => {
-//             if (error != null) {
-//                console.error('wkhtmltopdf failed!');
-//             } else {
-//                 console.log('PDF generation was successful. Starting S3 upload...');
-//               callback(null, 'Success');
-//             }
-//         }).pipe(createWriteStream);
-}
+    
+};

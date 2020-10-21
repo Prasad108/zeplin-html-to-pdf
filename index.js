@@ -41,7 +41,7 @@ exports.handler = function handler(event, context, callback) {
         });
         
             callback(null, {
-                data: buffer.toString("base64")
+                data: new Uint8Array.from(Buffer.from(buffer))
             });
         }).catch(error => {
             callback(errorUtil.createErrorResponse(500, "Internal server error", error));

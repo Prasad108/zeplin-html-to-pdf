@@ -6,16 +6,16 @@ const S3 = new AWS.S3();
 const fs = require('fs');
 
 exports.handler = function handler(event, context, callback) {
-    if (!event.html) {
+    if (!event.htmlContent) {
         const errorResponse = errorUtil.createErrorResponse(400, "Validation error: Missing field 'html'.");
         callback(errorResponse);
         return;
     }
     
-    const filename = `${(event.filename || Math.random().toString(36).slice(2))}.pdf`;
+    const filename = `${(event.s3FileName || Math.random().toString(36).slice(2))}.pdf`;
     const pageSize = event.pagesize || 'a4';
     const data = event.data;
-    const bucketName = event.bucketName || 'html-to-pdf-test-1';
+    const bucketName = event.s3BucketName || 'html-to-pdf-test-1';
 	const orientation = event.orientation || 'Landscape'
     
     const wkhtmltopdfOptions = [ orientation]

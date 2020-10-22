@@ -46,17 +46,14 @@ exports.handler = function handler(event, context, callback) {
 		     console.log( s3FileUrl );
                     console.info('Upload done!');
                // callback(null, { filename });
-		     return function() {
-			     s3FileUrl += data.Location ;
-				 console.log( s3FileUrl );
-			    }
-            }
-        });
-        
-            callback(null, {
+		      callback(null, {
                 fileContent: buffer.toString("base64"),
 		    s3FileUrl: s3FileUrl
             });
+            }
+        });
+        
+          
         }).catch(error => {
             callback(errorUtil.createErrorResponse(500, "Internal server error", error));
         });

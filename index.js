@@ -26,7 +26,7 @@ exports.handler = function handler(event, context, callback) {
     wkhtmltopdf(event.htmlContent, event.options)
         .then(buffer => {
         console.log("converted the html to PDF");
-        S3.putObject({
+        S3.upload({
             Bucket: bucketName,
             Key: filename,
             Body: buffer,

@@ -16,8 +16,9 @@ exports.handler = function handler(event, context, callback) {
     const pageSize = event.pagesize || 'a4';
     const data = event.data;
     const bucketName = event.s3BucketName || 'html-to-pdf-test-1';
-	const orientation = '--orientation' + event.orientation || '--orientation Landscape' ;
-	if(!event.options){
+	var orientation = '--orientation ';
+	const orientation +=   event.orientation || 'Landscape' ;
+	if(event.options == undefined){
 		event.options= [];
 	}
 	event.options.push(orientation);

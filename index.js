@@ -26,6 +26,7 @@ exports.handler = function handler(event, context, callback) {
     wkhtmltopdf(event.htmlContent, event.options)
         .then(buffer => {
         console.log("converted the html to PDF");
+	    var s3FileUrl = '';
         S3.upload({
             Bucket: bucketName,
             Key: filename,
@@ -39,6 +40,7 @@ exports.handler = function handler(event, context, callback) {
             } else {
                 console.log({ data });
 				console.log( data );
+		    s3FileUrl += data.Location ;
 				 console.log({ filename })
                     console.info('Upload done!');
                // callback(null, { filename });
@@ -46,7 +48,8 @@ exports.handler = function handler(event, context, callback) {
         });
         
             callback(null, {
-                fileContent: buffer.toString("base64")
+                fileContent: buffer.toString("base64"),
+		    s3FileUrl: s3FileUrl
             });
         }).catch(error => {
             callback(errorUtil.createErrorResponse(500, "Internal server error", error));

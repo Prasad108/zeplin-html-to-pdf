@@ -17,7 +17,7 @@ exports.handler = function handler(event, context, callback) {
     const data = event.data;
     const bucketName = event.s3BucketName || 'html-to-pdf-test-1';
 	var orientation = '--orientation ';
-	const orientation +=   event.orientation || 'Landscape' ;
+	orientation +=   event.orientation || 'Landscape' ;
 	if(event.options == undefined){
 		event.options= [];
 	}

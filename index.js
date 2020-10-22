@@ -17,6 +17,9 @@ exports.handler = function handler(event, context, callback) {
     const data = event.data;
     const bucketName = event.s3BucketName || 'html-to-pdf-test-1';
 	const orientation = '--orientation' + event.orientation || '--orientation Landscape' ;
+	if(!event.options){
+		event.options= [];
+	}
 	event.options.push(orientation);
 
     wkhtmltopdf(event.htmlContent, event.options)

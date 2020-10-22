@@ -31,7 +31,7 @@ exports.handler = function handler(event, context, callback) {
             Key: filename,
             Body: buffer,
             ContentType: 'application/pdf',
-        },function(error, data) => {
+        },function(error, data) {
             if (error != null) {
                 console.log({ error })
                 console.error('Unable to send file to S3');

@@ -46,8 +46,7 @@ exports.handler = function handler(event, context, callback) {
         });
         
             callback(null, {
-                fileContent: buffer.toString("base64"),
-		    s3FileUrl: 
+                fileContent: buffer.toString("base64")
             });
         }).catch(error => {
             callback(errorUtil.createErrorResponse(500, "Internal server error", error));

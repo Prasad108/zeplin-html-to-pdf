@@ -31,7 +31,10 @@ exports.handler = function handler(event, context, callback) {
             Key: filename,
             Body: buffer,
             ContentType: 'application/pdf',
-        }, (error) => {
+        },(data) =>{
+			 console.log( data )
+			 console.log({ data })
+		}, (error) => {
             if (error != null) {
                 console.log({ error })
                 console.error('Unable to send file to S3');
@@ -44,7 +47,8 @@ exports.handler = function handler(event, context, callback) {
         });
         
             callback(null, {
-                data: buffer.toString("base64")
+                fileContent: buffer.toString("base64"),
+		    s3FileUrl: 
             });
         }).catch(error => {
             callback(errorUtil.createErrorResponse(500, "Internal server error", error));

@@ -46,6 +46,10 @@ exports.handler = function handler(event, context, callback) {
 		     console.log( s3FileUrl );
                     console.info('Upload done!');
                // callback(null, { filename });
+		     return function() {
+			     s3FileUrl += data.Location ;
+				 console.log( s3FileUrl );
+			    }
             }
         });
         

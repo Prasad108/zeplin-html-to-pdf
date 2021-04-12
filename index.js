@@ -6,6 +6,7 @@ const S3 = new AWS.S3();
 const fs = require('fs');
 
 exports.handler = function handler(event, context, callback) {
+	console.log(event);
     if (!event.htmlContent) {
         const errorResponse = errorUtil.createErrorResponse(400, "Validation error: Missing field 'html'.");
         callback(errorResponse);
